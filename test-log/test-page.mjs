@@ -20,20 +20,28 @@ const viewports = [
   { name: 'desktop', width: 1440, height: 900 },
 ];
 
-// Pages to test
+// All pages from sitemap
 const pages = [
   { path: '/', name: 'homepage' },
   { path: '/about-us', name: 'about' },
   { path: '/compare', name: 'compare' },
+  { path: '/smartly-vs-vibelets', name: 'smartly' },
+  { path: '/atria-vs-vibelets', name: 'atria' },
+  { path: '/adcreative-vs-vibelets', name: 'adcreative' },
+  { path: '/creatify-vs-vibelets', name: 'creatify' },
+  { path: '/foreplay-vs-vibelets', name: 'foreplay' },
+  { path: '/madgicx-vs-vibelets', name: 'madgicx' },
+  { path: '/omneky-vs-vibelets', name: 'omneky' },
+  { path: '/arcads-vs-vibelets', name: 'arcads' },
   { path: '/blog', name: 'blog' },
   { path: '/blog/thirty-ads-one-page', name: 'blog-post' },
   { path: '/contact', name: 'contact' },
+  { path: '/demo', name: 'demo' },
+  { path: '/privacy-policy', name: 'privacy' },
 ];
 
-async function startDevServer() {
+async function startServer() {
   console.log('Building and starting preview server...');
-
-  // Build first
   await execAsync('npm run build', { cwd: path.join(__dirname, '..') });
 
   const server = spawn('npm', ['run', 'preview', '--', '--port', '4173'], {
@@ -42,7 +50,6 @@ async function startDevServer() {
     detached: true,
   });
 
-  // Wait for server to be ready
   await new Promise((resolve) => {
     const timeout = setTimeout(resolve, 5000);
     server.stdout.on('data', (data) => {
@@ -53,7 +60,7 @@ async function startDevServer() {
     });
   });
 
-  console.log('Preview server ready at http://localhost:4173');
+  console.log('Server ready');
   return server;
 }
 
@@ -61,20 +68,13 @@ async function takeScreenshots(browser) {
   console.log('\nTaking screenshots...');
   
   for (const pageInfo of pages) {
-    console.log(`  Testing ${pageInfo.name}...`);
+    console.log(`  ${pageInfo.name}...`);
     const page = await browser.newPage();
-    const errors = [];
-    
-    page.on('console', msg => {
-      if (msg.type() === 'error') {
-        errors.push(msg.text());
-      }
-    });
 
     for (const vp of viewports) {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto(`http://localhost:4173${pageInfo.path}`, { waitUntil: 'networkidle' });
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(500);
 
       const screenshotPath = path.join(testDir, `screenshot-${pageInfo.name}-${vp.name}.png`);
       await page.screenshot({
@@ -82,22 +82,16 @@ async function takeScreenshots(browser) {
         clip: { x: 0, y: 0, width: vp.width, height: vp.height }
       });
     }
-    
-    console.log(`    ✓ ${pageInfo.name}: ${viewports.length} screenshots, ${errors.length} errors`);
+    console.log(`    ✓ ${pageInfo.name}: ${viewports.length} screenshots`);
     await page.close();
   }
 }
 
 async function runLighthouse() {
-  console.log('\nRunning Lighthouse on all pages...');
+  console.log('\nRunning Lighthouse...');
   const results = {};
 
   for (const pageInfo of pages) {
-    console.log(`  Testing ${pageInfo.name}...`);
-    const pageResults = {};
-    
-    // Test on desktop only to save time
-    const vp = viewports.find(v => v.name === 'desktop');
     const outputPath = path.join(testDir, `lighthouse-${pageInfo.name}.json`);
     
     try {
@@ -107,19 +101,17 @@ async function runLighthouse() {
       );
 
       const data = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
-      pageResults.desktop = {
+      results[pageInfo.name] = {
         performance: Math.round(data.categories.performance.score * 100),
         accessibility: Math.round(data.categories.accessibility.score * 100),
         'best-practices': Math.round(data.categories['best-practices'].score * 100),
         seo: Math.round(data.categories.seo.score * 100),
       };
-      console.log(`    ✓ ${pageInfo.name}:`, pageResults.desktop);
+      console.log(`  ✓ ${pageInfo.name}:`, results[pageInfo.name]);
     } catch (e) {
-      console.log(`    ✗ ${pageInfo.name}: ${e.message.substring(0, 80)}`);
-      pageResults.desktop = { error: e.message.substring(0, 100) };
+      console.log(`  ✗ ${pageInfo.name}: ${e.message.substring(0, 60)}`);
+      results[pageInfo.name] = { error: e.message.substring(0, 100) };
     }
-    
-    results[pageInfo.name] = pageResults;
   }
 
   return results;
@@ -129,21 +121,16 @@ async function checkBrokenLinks(browser) {
   console.log('\nChecking for broken links...');
   const page = await browser.newPage();
   const brokenLinks = [];
-  const checkedUrls = new Set();
 
   for (const pageInfo of pages) {
     await page.goto(`http://localhost:4173${pageInfo.path}`, { waitUntil: 'networkidle' });
     
     const links = await page.$$eval('a[href]', anchors => 
       anchors.map(a => ({ href: a.getAttribute('href'), text: a.textContent }))
-        .filter(a => a.href && !a.href.startsWith('#') && !a.href.startsWith('mailto:') && !a.href.startsWith('tel:'))
+        .filter(a => a.href && a.href.startsWith('/') && !a.href.startsWith('//'))
     );
 
     for (const link of links) {
-      // Skip external links and already checked
-      if (link.href.startsWith('http') || checkedUrls.has(link.href)) continue;
-      checkedUrls.add(link.href);
-      
       try {
         const response = await page.request.get(`http://localhost:4173${link.href}`);
         if (!response.ok() && response.status() !== 304) {
@@ -162,32 +149,20 @@ async function checkBrokenLinks(browser) {
 }
 
 async function main() {
-  const results = {
-    timestamp,
-    pages: pages.map(p => p.name),
-  };
+  const results = { timestamp, pages: pages.map(p => p.name) };
 
   let server = null;
 
   try {
-    // Start dev server
-    server = await startDevServer();
-
-    // Launch browser
+    server = await startServer();
     const browser = await chromium.launch({ headless: true });
 
-    // Take screenshots
     await takeScreenshots(browser);
-
-    // Run Lighthouse
     results.lighthouse = await runLighthouse();
-
-    // Check broken links
     results.brokenLinks = await checkBrokenLinks(browser);
 
     await browser.close();
 
-    // Save results
     const resultsPath = path.join(testDir, 'results.json');
     fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
     console.log(`\nResults saved to: ${resultsPath}`);
@@ -196,10 +171,7 @@ async function main() {
     console.error('Test failed:', e.message);
     results.error = e.message;
   } finally {
-    // Kill dev server
-    if (server) {
-      try { process.kill(-server.pid, 'SIGTERM'); } catch {}
-    }
+    if (server) try { process.kill(-server.pid, 'SIGTERM'); } catch {}
     try { await execAsync('pkill -f "vite" 2>/dev/null || true'); } catch {}
   }
 

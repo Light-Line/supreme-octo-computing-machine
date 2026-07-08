@@ -54,12 +54,12 @@ export default function Navigation() {
 
           {/* CTA Buttons */}
           <div className="flex items-center gap-3">
-            <a
-              href="#demo"
+            <Link
+              to="/demo"
               className="hidden sm:block text-sm text-muted hover:text-foreground transition-colors"
             >
               Book a Demo
-            </a>
+            </Link>
             <a
               href="https://app.vibelets.ai/signup"
               className="text-sm font-medium px-4 py-2 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"

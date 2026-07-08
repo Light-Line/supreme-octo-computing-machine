@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import HexBackground from '../components/HexBackground'
@@ -84,30 +85,36 @@ export default function ComparePage() {
           <div className="container-tight">
             <div className="grid md:grid-cols-2 gap-6">
               {competitors.map((comp, index) => (
-                <motion.div
+                <Link
                   key={comp.slug}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.05 * index }}
-                  className="bg-background rounded-2xl p-6 md:p-8 border border-border hover:border-accent/50 transition-colors"
+                  to={`/${comp.slug}-vs-vibelets`}
+                  className="block"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold mb-1">{comp.name} vs Vibelets</h3>
-                      <p className="text-sm text-muted">{comp.description}</p>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.05 * index }}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-background rounded-2xl p-6 md:p-8 border border-border hover:border-accent/50 transition-colors"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="text-xl font-bold mb-1">{comp.name} vs Vibelets</h3>
+                        <p className="text-sm text-muted">{comp.description}</p>
+                      </div>
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                        </svg>
+                      </div>
                     </div>
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                      </svg>
+                    <div className="pt-4 border-t border-border">
+                      <p className="text-sm text-muted mb-2">Vibelets advantage:</p>
+                      <p className="font-medium text-accent">{comp.vibeletsAdvantage}</p>
                     </div>
-                  </div>
-                  <div className="pt-4 border-t border-border">
-                    <p className="text-sm text-muted mb-2">Vibelets advantage:</p>
-                    <p className="font-medium text-accent">{comp.vibeletsAdvantage}</p>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </Link>
               ))}
             </div>
           </div>
