@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import HexBackground from './HexBackground';
 
 const steps = [
   {
@@ -25,8 +26,16 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="section-padding">
-      <div className="container-tight">
+    <section id="how-it-works" className="relative section-padding overflow-hidden">
+      {/* Hexagon background pattern */}
+      <HexBackground
+        color="var(--hex-color, #7C3AED)"
+        baseOpacity={0.04}
+        hexSize={60}
+        animationDuration={12}
+      />
+      
+      <div className="container-tight relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

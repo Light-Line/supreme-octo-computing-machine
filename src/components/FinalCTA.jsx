@@ -1,9 +1,18 @@
 import { motion } from 'framer-motion';
+import HexBackground from './HexBackground';
 
 export default function FinalCTA() {
   return (
-    <section id="demo" className="section-padding">
-      <div className="container-tight">
+    <section id="demo" className="relative section-padding overflow-hidden">
+      {/* Hexagon background pattern */}
+      <HexBackground
+        color="var(--hex-color, #7C3AED)"
+        baseOpacity={0.06}
+        hexSize={40}
+        animationDuration={8}
+      />
+      
+      <div className="container-tight relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

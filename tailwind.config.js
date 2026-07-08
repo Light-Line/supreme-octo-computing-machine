@@ -38,3 +38,9 @@ export default {
   },
   plugins: [],
 }
+
+// CSS variables for HexBackground customization:
+// --hex-bg-color: Hexagon stroke color (default: #7C3AED)
+// --hex-bg-opacity: Base opacity (default: 0.06)
+// --hex-bg-size: Hexagon size in px (default: 60)
+// --hex-bg-animation-duration: Breathing animation seconds (default: 8)

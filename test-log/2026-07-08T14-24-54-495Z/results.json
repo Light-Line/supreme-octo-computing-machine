@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-07-08T14-24-54-495Z",
+  "viewports": [
+    "mobile: 375x812",
+    "tablet: 768x1024",
+    "desktop: 1440x900"
+  ],
+  "consoleErrors": [],
+  "lighthouse": {
+    "mobile": {
+      "performance": 96,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91
+    },
+    "tablet": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91
+    },
+    "desktop": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91
+    }
+  }
+}

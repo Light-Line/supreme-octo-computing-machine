@@ -1,9 +1,18 @@
 import { motion } from 'framer-motion';
+import HexBackground from './HexBackground';
 
 export default function Hero() {
   return (
-    <section className="pt-32 md:pt-40 pb-16 md:pb-24 lg:pb-32">
-      <div className="container-tight">
+    <section className="relative pt-32 md:pt-40 pb-16 md:pb-24 lg:pb-32 overflow-hidden">
+      {/* Hexagon background pattern */}
+      <HexBackground
+        color="var(--hex-color, #7C3AED)"
+        baseOpacity={0.05}
+        hexSize={50}
+        animationDuration={10}
+      />
+      
+      <div className="container-tight relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <motion.div
