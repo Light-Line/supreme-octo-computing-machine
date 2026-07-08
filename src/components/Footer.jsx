@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import LogoSvg from '../assets/logos/logo.svg';
 
 const footerLinks = [
   { label: 'About Us', href: '/about-us' },
@@ -16,7 +15,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <LogoSvg className="h-6 w-auto" />
+            <img src="/logo.svg" alt="Vibelets" className="h-6 w-auto" />
           </Link>
 
           {/* Links */}

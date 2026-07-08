@@ -1,0 +1,120 @@
+{
+  "timestamp": "2026-07-08T15-34-55-580Z",
+  "pages": [
+    "homepage",
+    "about",
+    "compare",
+    "smartly",
+    "atria",
+    "adcreative",
+    "creatify",
+    "foreplay",
+    "madgicx",
+    "omneky",
+    "arcads",
+    "blog",
+    "blog-post",
+    "contact",
+    "demo",
+    "privacy"
+  ],
+  "lighthouse": {
+    "homepage": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "about": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "compare": {
+      "performance": 99,
+      "accessibility": 96,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "smartly": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "atria": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "adcreative": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "creatify": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "foreplay": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "madgicx": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "omneky": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "arcads": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "blog": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "blog-post": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "contact": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "demo": {
+      "performance": 99,
+      "accessibility": 92,
+      "best-practices": 100,
+      "seo": 92
+    },
+    "privacy": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 92
+    }
+  },
+  "brokenLinks": []
+}
