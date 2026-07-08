@@ -1,149 +1,102 @@
-# Assets Manifest - Vibelets.ai
+# Assets Manifest - vibelets.ai
 
-## Crawled Pages
+## Asset Audit Result
 
-### 1. Homepage (/)
-**Sections found:**
-- Hero: "Your AI Marketer" headline, badge "Paste a URL. First ad live in 10 minutes."
-- Live Feed: "Ads our AI generated in the last 60 minutes"
-- How It Works: 4 steps (Read brand, Build creatives, Launch ads, Optimize & scale)
-- Product Intelligence: "Your brand. Decoded in 90 seconds."
-- Proof: $12M+ spend, 40,204 creatives, 1,412 brands, 100+ ROAS
-- Pricing: Starter (Free), Pro (Unlocking Soon), Enterprise (Unlocking Soon)
-- FAQ: 10 questions
-- Final CTA: "Paste a URL. First ad live in under 10 minutes."
+**Status: NO PUBLICLY DOWNLOADABLE ASSETS FOUND**
 
-**Media assets on homepage:**
-- No images detected in markdown content
-- Video placeholder mentioned (demo video)
-- No SVG/logo detected in crawl
+The vibelets.ai website is built with **Framer** and has **zero** publicly accessible images, SVGs, or media files. All assets are rendered client-side via Framer's CDN.
 
----
+### What We Checked:
+- Homepage HTML source: No images found
+- CSS backgrounds: None found  
+- External CDN URLs (Supabase, Cloudinary, etc.): None found
+- OG/Twitter meta images: Referenced but 404
+- Favicon/logo: 404
+- Static public folder: Empty/not accessible
 
-### 2. About Us (/about-us)
-**Sections found:**
-- Hero: "Helping You Grow Without Limits"
-- Mission/Vision cards: "Driven by Purpose" + "Built For Growth"
-- Story section: "Why We're Building Vibelets" (12 years experience narrative)
-- Testimonials: 2 quotes from Mark Daniels (Spark Digital) and Sarah Thompson (EcoGoods)
-
-**Media assets on About Us:**
-- No images detected in markdown
-- TODO: Need real testimonial photos for Mark Daniels and Sarah Thompson
-- TODO: Team/org photos if showing founders
+### Verification Commands Run:
+```bash
+curl -s "https://www.vibelets.ai/" | grep -oE 'https?://[^"'\''>\s]+' | grep -E '\.(jpg|png|svg|webp)' # Result: 0 matches
+curl -s "https://www.vibelets.ai/logo.svg" -I # Result: 404
+curl -s "https://www.vibelets.ai/og-image.png" -I # Result: 404
+curl -s "https://www.vibelets.ai/favicon.ico" -I # Result: 404
+```
 
 ---
 
-### 3. Compare (/compare)
-**Sections found:**
-- Comparison cards for 8 competitors:
-  - Smartly v/s Vibelets
-  - Atria v/s Vibelets
-  - Adcreative v/s Vibelets
-  - Creatify v/s Vibelets
-  - Foreplay v/s Vibelets
-  - Madgicx v/s Vibelets
-  - Omneky v/s Vibelets
-  - Arcads v/s Vibelets
+## Required Assets (From Vibelets Team)
 
-**Media assets on Compare:**
-- No images detected
-- Could use competitor logos for visual comparison table (TODO: need licensed use)
+The following assets need to be provided by the Vibelets team:
 
----
+### Priority 1: Essential
+- [ ] **Logo SVG** - Primary brand logo (light/dark variants)
+- [ ] **Favicon ICO** - Browser tab icon
+- [ ] **OG Image (1200x630)** - Social sharing image
 
-### 4. Blog (/blog)
-**Sections found:**
-- 6 blog post listings with titles, descriptions, author names, dates
-- Post links to full articles
+### Priority 2: Homepage Enhancement
+- [ ] **Hero Demo Video** - Product demo video (mp4/webm, <5MB)
+- [ ] **Hero Image/Video Placeholder** - Until video is ready
+- [ ] **Product Screenshots** - Dashboard/product UI screenshots
 
-**Blog posts:**
-1. "30 Meta ad variations from one product page"
-2. "Meta ads account audit: the 12 things AI flags first"
-3. "Automated rules that pause losing ads and scale winners"
-4. "Run Meta Ads in Plain English"
-5. "When to Scale a Meta Ad: The 6 Signals"
-6. "How to turn a competitor's ad into your own"
+### Priority 3: Social Proof
+- [ ] **Testimonial Photos** - Mark Daniels (Spark Digital)
+- [ ] **Testimonial Photos** - Sarah Thompson (EcoGoods)
+- [ ] **Client Logos** - For About page or social proof section
 
-**Media assets on Blog:**
-- TODO: Blog featured images (6 images needed)
-- TODO: Author avatars (2+ authors)
+### Priority 4: Blog
+- [ ] **Blog Featured Images** - 16 blog posts need featured images
+- [ ] **Author Avatars** - Vibelets Team author photos
+
+### Priority 5: Decorative
+- [ ] **Hexagon Logo Mark** - Small hex icon for branding consistency
+- [ ] **Brand Pattern SVG** - For HexBackground component customization
 
 ---
 
-### 5. Contact (/contact)
-**Sections found:**
-- "Get in touch with us"
-- Email: support@vibelets.ai
-- Phone: +1 (234) 567 890
+## What We Built Instead
 
-**Media assets on Contact:**
-- No images detected
-- Could use contact form illustration (TODO: optional)
+Since no assets were available, we created:
 
----
+### Placeholder Components:
+1. **Video placeholder** - Gradient box with play button
+2. **Testimonial placeholders** - Initials in colored circles
+3. **Blog post images** - SVG icons in gradient boxes
+4. **HexBackground component** - CSS-based hex pattern (no external assets)
 
-## Asset Summary
-
-### Owned Assets to Download (not found on site)
-The vibelets.ai site doesn't expose downloadable assets in the markdown crawl. No SVG logos, product screenshots, or demo videos were detected in the accessible content.
-
-**TODO: Assets needed from Vibelets team:**
-1. Logo (SVG or PNG, light and dark variants)
-2. Hero demo video (if exists)
-3. Product screenshots for About Us or feature sections
-4. Testimonial photos for Mark Daniels and Sarah Thompson
-5. Team/founder photos for About page
-6. Blog featured images (6 total)
-7. Any hexagonal brand elements/icons
-
-### Third-Party/Stock Assets (DO NOT USE)
-The site uses Supabase storage for images. Without explicit ownership confirmation, assume these are:
-- Stock photography (if any)
-- User-generated content
-
-**Replacement approach:** Use Unsplash or similar with proper licensing for any needed imagery.
+### Recommendations:
+1. Request logo and branding assets from Vibelets design team
+2. Use screenshot tool to capture product UI once accessible
+3. Consider using Unsplash for stock photography (properly licensed)
+4. Record demo video when product is ready
 
 ---
 
-## Comparison Page Content (Detailed)
+## File Structure (When Assets Are Available)
 
-### Smartly vs Vibelets
-Smartly: Traditional ad platform with manual workflows
-Vibelets: Takes URL, builds campaign, CAC protection with automation
-
-### Atria vs Vibelets  
-Atria: Insight-focused optimization
-Vibelets: Live guardrails, instant launch, outcome-focused
-
-### AdCreative vs Vibelets
-AdCreative: Asset generation only
-Vibelets: Full cycle - launch, optimize, grow with emotional intelligence
-
-### Creatify vs Vibelets
-Creatify: Content-focused
-Vibelets: Full campaign with guardrails, pacing, daily scale-or-kill decisions
-
-### Foreplay vs Vibelets
-Foreplay: Multi-step manual process
-Vibelets: Minutes not weeks, full automation
-
-### Madgicx vs Vibelets
-Madgicx: Optimization-focused
-Vibelets: AI-powered optimization + creative flexibility
-
-### Omneky vs Vibelets
-Omneky: Guided flows, live guardrails
-Vibelets: Same features + instant launch focus on outcomes
-
-### Arcads vs Vibelets
-Arcads: AI video clips and variants
-Vibelets: Broader scope, full campaign management
+```
+src/assets/
+├── hero/
+│   ├── logo.svg
+│   ├── demo-video.mp4
+│   └── og-image.png
+├── logos/
+│   └── vibelets-logo.svg
+├── testimonials/
+│   ├── mark-daniels.jpg
+│   └── sarah-thompson.jpg
+├── blog/
+│   ├── thirty-ads-one-page.jpg
+│   └── ...
+└── icons/
+    └── hex-logo.svg
+```
 
 ---
 
-## New Pages Discovered (Not Yet Built)
-- /demo - Demo booking page
-- /privacy-policy - Privacy policy
-- /blog/[slug] - Individual blog posts (6 posts)
-- /compare/[competitor] - Individual comparison pages (8 competitors)
+## Update Instructions
+
+When you receive assets from the Vibelets team:
+1. Download to `src/assets/` following the structure above
+2. Update components to reference local files
+3. Run `npm run build` to verify
+4. Test with Playwright to confirm images load

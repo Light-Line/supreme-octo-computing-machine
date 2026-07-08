@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import LogoSvg from '../assets/logos/logo.svg';
 
 const navLinks = [
   { label: 'About', href: '/about-us' },
@@ -36,7 +37,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl md:text-2xl font-bold">Vibelets</span>
+            <LogoSvg className="h-8 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
