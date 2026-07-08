@@ -34,7 +34,7 @@ export function HoneycombGrid({
   return (
     <div
       className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}
-      style={{ ['--hex-opacity' as string]: opacity }}
+      style={{ '--hex-opacity': opacity }}
     >
       <svg
         width="100%"
