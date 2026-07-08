@@ -20,6 +20,16 @@ const viewports = [
   { name: 'desktop', width: 1440, height: 900 },
 ];
 
+// Pages to test
+const pages = [
+  { path: '/', name: 'homepage' },
+  { path: '/about-us', name: 'about' },
+  { path: '/compare', name: 'compare' },
+  { path: '/blog', name: 'blog' },
+  { path: '/blog/thirty-ads-one-page', name: 'blog-post' },
+  { path: '/contact', name: 'contact' },
+];
+
 async function startDevServer() {
   console.log('Building and starting preview server...');
 
@@ -49,81 +59,112 @@ async function startDevServer() {
 
 async function takeScreenshots(browser) {
   console.log('\nTaking screenshots...');
-  const page = await browser.newPage();
-
-  for (const vp of viewports) {
-    await page.setViewportSize({ width: vp.width, height: vp.height });
-    await page.goto('http://localhost:4173', { waitUntil: 'networkidle' });
-    await page.waitForTimeout(2000);
-
-    const screenshotPath = path.join(testDir, `screenshot-${vp.name}.png`);
-    // Use viewport screenshot instead of fullPage
-    await page.screenshot({
-      path: screenshotPath,
-      clip: { x: 0, y: 0, width: vp.width, height: vp.height }
+  
+  for (const pageInfo of pages) {
+    console.log(`  Testing ${pageInfo.name}...`);
+    const page = await browser.newPage();
+    const errors = [];
+    
+    page.on('console', msg => {
+      if (msg.type() === 'error') {
+        errors.push(msg.text());
+      }
     });
-    console.log(`  ✓ ${vp.name} (${vp.width}x${vp.height})`);
-  }
 
-  await page.close();
-}
+    for (const vp of viewports) {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.goto(`http://localhost:4173${pageInfo.path}`, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(1000);
 
-async function checkConsoleErrors(browser) {
-  console.log('\nChecking console errors...');
-  const page = await browser.newPage();
-  const errors = [];
-
-  page.on('console', msg => {
-    if (msg.type() === 'error') {
-      errors.push({ text: msg.text() });
+      const screenshotPath = path.join(testDir, `screenshot-${pageInfo.name}-${vp.name}.png`);
+      await page.screenshot({
+        path: screenshotPath,
+        clip: { x: 0, y: 0, width: vp.width, height: vp.height }
+      });
     }
-  });
-
-  page.on('pageerror', error => {
-    errors.push({ text: error.message, type: 'pageerror' });
-  });
-
-  await page.goto('http://localhost:4173', { waitUntil: 'networkidle' });
-  await page.waitForTimeout(3000);
-
-  await page.close();
-  return errors;
+    
+    console.log(`    ✓ ${pageInfo.name}: ${viewports.length} screenshots, ${errors.length} errors`);
+    await page.close();
+  }
 }
 
 async function runLighthouse() {
-  console.log('\nRunning Lighthouse...');
+  console.log('\nRunning Lighthouse on all pages...');
   const results = {};
 
-  for (const vp of viewports) {
-    const outputPath = path.join(testDir, `lighthouse-${vp.name}.json`);
+  for (const pageInfo of pages) {
+    console.log(`  Testing ${pageInfo.name}...`);
+    const pageResults = {};
+    
+    // Test on desktop only to save time
+    const vp = viewports.find(v => v.name === 'desktop');
+    const outputPath = path.join(testDir, `lighthouse-${pageInfo.name}.json`);
+    
     try {
       await execAsync(
-        `npx lighthouse http://localhost:4173 --output=json --output-path=${outputPath} --chrome-flags="--headless --no-sandbox" --only-categories=performance,accessibility,best-practices,seo --quiet`,
+        `npx lighthouse http://localhost:4173${pageInfo.path} --output=json --output-path=${outputPath} --chrome-flags="--headless --no-sandbox" --only-categories=performance,accessibility,best-practices,seo --quiet`,
         { timeout: 120000, cwd: path.join(__dirname, '..') }
       );
 
       const data = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
-      const scores = {
+      pageResults.desktop = {
         performance: Math.round(data.categories.performance.score * 100),
         accessibility: Math.round(data.categories.accessibility.score * 100),
         'best-practices': Math.round(data.categories['best-practices'].score * 100),
         seo: Math.round(data.categories.seo.score * 100),
       };
-      results[vp.name] = scores;
-      console.log(`  ✓ ${vp.name}:`, scores);
+      console.log(`    ✓ ${pageInfo.name}:`, pageResults.desktop);
     } catch (e) {
-      console.log(`  ✗ ${vp.name}: ${e.message.substring(0, 100)}`);
-      results[vp.name] = { error: e.message.substring(0, 100) };
+      console.log(`    ✗ ${pageInfo.name}: ${e.message.substring(0, 80)}`);
+      pageResults.desktop = { error: e.message.substring(0, 100) };
     }
+    
+    results[pageInfo.name] = pageResults;
   }
 
   return results;
 }
 
+async function checkBrokenLinks(browser) {
+  console.log('\nChecking for broken links...');
+  const page = await browser.newPage();
+  const brokenLinks = [];
+  const checkedUrls = new Set();
+
+  for (const pageInfo of pages) {
+    await page.goto(`http://localhost:4173${pageInfo.path}`, { waitUntil: 'networkidle' });
+    
+    const links = await page.$$eval('a[href]', anchors => 
+      anchors.map(a => ({ href: a.getAttribute('href'), text: a.textContent }))
+        .filter(a => a.href && !a.href.startsWith('#') && !a.href.startsWith('mailto:') && !a.href.startsWith('tel:'))
+    );
+
+    for (const link of links) {
+      // Skip external links and already checked
+      if (link.href.startsWith('http') || checkedUrls.has(link.href)) continue;
+      checkedUrls.add(link.href);
+      
+      try {
+        const response = await page.request.get(`http://localhost:4173${link.href}`);
+        if (!response.ok() && response.status() !== 304) {
+          brokenLinks.push({ page: pageInfo.name, href: link.href, status: response.status() });
+        }
+      } catch (e) {
+        brokenLinks.push({ page: pageInfo.name, href: link.href, error: e.message });
+      }
+    }
+  }
+
+  await page.close();
+  console.log(`  Found ${brokenLinks.length} broken links`);
+  brokenLinks.forEach(l => console.log(`    - ${l.page}: ${l.href} (${l.status || l.error})`));
+  return brokenLinks;
+}
+
 async function main() {
   const results = {
     timestamp,
-    viewports: viewports.map(v => `${v.name}: ${v.width}x${v.height}`),
+    pages: pages.map(p => p.name),
   };
 
   let server = null;
@@ -138,13 +179,11 @@ async function main() {
     // Take screenshots
     await takeScreenshots(browser);
 
-    // Check console errors
-    results.consoleErrors = await checkConsoleErrors(browser);
-    console.log(`\nConsole errors: ${results.consoleErrors.length}`);
-    results.consoleErrors.forEach(e => console.log(`  - ${e.text.substring(0, 100)}`));
-
     // Run Lighthouse
     results.lighthouse = await runLighthouse();
+
+    // Check broken links
+    results.brokenLinks = await checkBrokenLinks(browser);
 
     await browser.close();
 

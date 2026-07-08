@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-07-08T14-44-43-498Z",
+  "pages": [
+    "homepage",
+    "about",
+    "compare",
+    "blog",
+    "blog-post",
+    "contact"
+  ],
+  "lighthouse": {
+    "homepage": {
+      "desktop": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 91
+      }
+    },
+    "about": {
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 91
+      }
+    },
+    "compare": {
+      "desktop": {
+        "performance": 100,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 91
+      }
+    },
+    "blog": {
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 91
+      }
+    },
+    "blog-post": {
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 91
+      }
+    },
+    "contact": {
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 91
+      }
+    }
+  },
+  "brokenLinks": []
+}

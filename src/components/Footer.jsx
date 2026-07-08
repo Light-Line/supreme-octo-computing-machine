@@ -1,11 +1,11 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const footerLinks = [
-  { label: 'About Us', href: './about-us' },
-  { label: 'Compare', href: './compare' },
-  { label: 'Blog', href: './blog' },
-  { label: 'Contact', href: './contact' },
-  { label: 'Privacy Policy', href: './privacy-policy' },
+  { label: 'About Us', href: '/about-us' },
+  { label: 'Compare', href: '/compare' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export default function Footer() {
@@ -14,20 +14,20 @@ export default function Footer() {
       <div className="container-tight">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <span className="text-xl font-bold">Vibelets</span>
-          </a>
+          </Link>
 
           {/* Links */}
           <nav className="flex flex-wrap items-center justify-center gap-6">
             {footerLinks.map((link) => (
-              <a
+              <Link
                 key={link.label}
-                href={link.href}
+                to={link.href}
                 className="text-sm text-muted hover:text-foreground transition-colors"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 

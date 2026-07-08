@@ -6,8 +6,8 @@ export default function Hero() {
     <section className="relative pt-32 md:pt-40 pb-16 md:pb-24 lg:pb-32 overflow-hidden">
       {/* Hexagon background pattern */}
       <HexBackground
-        color="var(--hex-color, #7C3AED)"
-        baseOpacity={0.05}
+        color="#7C3AED"
+        baseOpacity={0.08}
         hexSize={50}
         animationDuration={10}
       />

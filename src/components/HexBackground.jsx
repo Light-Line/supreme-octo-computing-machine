@@ -1,12 +1,8 @@
+import { useId } from 'react';
+
 /**
  * HexBackground - A subtle hexagonal grid pattern with breathing animation
- * Performance-optimized using CSS background pattern
- * 
- * CSS Variables for customization:
- * --hex-color: Base color for hexagons (default: #7C3AED)
- * --hex-opacity: Base opacity (default: 0.06)
- * --hex-size: Size in px (default: 60)
- * --hex-animation-duration: Animation seconds (default: 8)
+ * Uses SVG pattern for reliable rendering
  */
 export default function HexBackground({
   className = '',
@@ -15,46 +11,66 @@ export default function HexBackground({
   hexSize = 60,
   animationDuration = 8,
 }) {
-  // Encode color for SVG
-  const encodedColor = encodeURIComponent(color);
+  const uniqueId = useId();
+  const patternId = `hex-pattern-${uniqueId}`;
   const h = Math.round(hexSize * 0.866); // sqrt(3)/2
-  
-  // Generate SVG pattern data URL
-  const patternSvg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="${hexSize * 2}" height="${h * 2}">
-      <defs>
-        <pattern id="hex" x="0" y="0" width="${hexSize * 2}" height="${h * 2}" patternUnits="userSpaceOnUse">
-          <path d="M${hexSize},0 L${hexSize * 2},${h * 0.5} L${hexSize * 2},${h * 1.5} L${hexSize},${h * 2} L0,${h * 1.5} L0,${h * 0.5} Z" 
-                fill="none" stroke="${encodedColor}" stroke-width="1" opacity="${baseOpacity}"/>
-          <path d="M${hexSize * 0.5},${h * 0.5} L${hexSize * 1.5},${h} L${hexSize * 1.5},${h * 2} L${hexSize * 0.5},${h * 2.5} L${-hexSize * 0.5},${h * 2} L${-hexSize * 0.5},${h} Z" 
-                fill="none" stroke="${encodedColor}" stroke-width="1" opacity="${baseOpacity * 0.7}"/>
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#hex)"/>
-      <style>
-        pattern { animation: hexBreathe ${animationDuration}s ease-in-out infinite; }
-        @keyframes hexBreathe {
-          0%, 100% { opacity: ${baseOpacity * 0.5}; }
-          50% { opacity: ${baseOpacity * 1.5}; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          pattern { animation: none; }
-        }
-      </style>
-    </svg>
-  `.trim().replace(/\s+/g, ' ');
-
-  const dataUrl = `data:image/svg+xml,${encodeURIComponent(patternSvg)}`;
 
   return (
     <div
       className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}
-      style={{
-        backgroundImage: `url("${dataUrl}")`,
-        backgroundRepeat: 'repeat',
-        backgroundSize: `${hexSize * 2}px ${h * 2}px`,
-      }}
       aria-hidden="true"
-    />
+    >
+      <svg
+        width="100%"
+        height="100%"
+        style={{ position: 'absolute', top: 0, left: 0 }}
+      >
+        <defs>
+          <pattern
+            id={patternId}
+            x="0"
+            y="0"
+            width={hexSize * 4}
+            height={h * 2}
+            patternUnits="userSpaceOnUse"
+          >
+            {/* Main flat-top hexagon */}
+            <polygon
+              points={`${hexSize},0 ${hexSize * 3},0 ${hexSize * 4},${h} ${hexSize * 3},${h * 2} ${hexSize},${h * 2} 0,${h}`}
+              fill="none"
+              stroke={color}
+              strokeWidth="1"
+              opacity={baseOpacity}
+            />
+            {/* Staggered hex */}
+            <polygon
+              points={`${hexSize * 2.5},${h} ${hexSize * 4.5},${h} ${hexSize * 5.5},${h * 2} ${hexSize * 4.5},${h * 3} ${hexSize * 2.5},${h * 3} ${hexSize * 1.5},${h * 2}`}
+              fill="none"
+              stroke={color}
+              strokeWidth="1"
+              opacity={baseOpacity * 0.5}
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+      </svg>
+      
+      {/* Breathing animation via CSS */}
+      <style>{`
+        [id="${patternId}"] polygon {
+          animation: hexBreathe${uniqueId} ${animationDuration}s ease-in-out infinite;
+        }
+        [id="${patternId}"] polygon:last-child {
+          animation-delay: ${animationDuration * 0.25}s;
+        }
+        @keyframes hexBreathe${uniqueId} {
+          0%, 100% { opacity: ${baseOpacity * 0.4}; }
+          50% { opacity: ${baseOpacity * 1.3}; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [id="${patternId}"] polygon { animation: none; }
+        }
+      `}</style>
+    </div>
   );
 }
