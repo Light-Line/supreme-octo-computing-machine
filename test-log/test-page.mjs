@@ -21,8 +21,12 @@ const viewports = [
 ];
 
 async function startDevServer() {
-  console.log('Starting dev server...');
-  const server = spawn('npm', ['run', 'dev'], {
+  console.log('Building and starting preview server...');
+
+  // Build first
+  await execAsync('npm run build', { cwd: path.join(__dirname, '..') });
+
+  const server = spawn('npm', ['run', 'preview', '--', '--port', '4173'], {
     cwd: path.join(__dirname, '..'),
     stdio: ['ignore', 'pipe', 'pipe'],
     detached: true,
@@ -30,7 +34,7 @@ async function startDevServer() {
 
   // Wait for server to be ready
   await new Promise((resolve) => {
-    const timeout = setTimeout(resolve, 8000);
+    const timeout = setTimeout(resolve, 5000);
     server.stdout.on('data', (data) => {
       if (data.toString().includes('Local:')) {
         clearTimeout(timeout);
@@ -39,7 +43,7 @@ async function startDevServer() {
     });
   });
 
-  console.log('Dev server ready');
+  console.log('Preview server ready at http://localhost:4173');
   return server;
 }
 
@@ -49,7 +53,7 @@ async function takeScreenshots(browser) {
 
   for (const vp of viewports) {
     await page.setViewportSize({ width: vp.width, height: vp.height });
-    await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+    await page.goto('http://localhost:4173', { waitUntil: 'networkidle' });
     await page.waitForTimeout(2000);
 
     const screenshotPath = path.join(testDir, `screenshot-${vp.name}.png`);
@@ -79,7 +83,7 @@ async function checkConsoleErrors(browser) {
     errors.push({ text: error.message, type: 'pageerror' });
   });
 
-  await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+  await page.goto('http://localhost:4173', { waitUntil: 'networkidle' });
   await page.waitForTimeout(3000);
 
   await page.close();
@@ -94,7 +98,7 @@ async function runLighthouse() {
     const outputPath = path.join(testDir, `lighthouse-${vp.name}.json`);
     try {
       await execAsync(
-        `npx lighthouse http://localhost:5173 --output=json --output-path=${outputPath} --chrome-flags="--headless --no-sandbox" --only-categories=performance,accessibility,best-practices,seo --quiet`,
+        `npx lighthouse http://localhost:4173 --output=json --output-path=${outputPath} --chrome-flags="--headless --no-sandbox" --only-categories=performance,accessibility,best-practices,seo --quiet`,
         { timeout: 120000, cwd: path.join(__dirname, '..') }
       );
 
