@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import HexBackground from './HexBackground';
+import demoVideo from '../assets/videos/demo-1.mp4';
 
 export default function Hero() {
+  const [isPlaying, setIsPlaying] = useState(false);
+
   return (
     <section className="relative pt-32 md:pt-40 pb-16 md:pb-24 lg:pb-32 overflow-hidden">
       {/* Hexagon background pattern */}
@@ -76,26 +80,33 @@ export default function Hero() {
             14-day trial · No credit card · Cancel anytime
           </motion.p>
 
-          {/* Video placeholder */}
+          {/* Video */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
             className="mt-16 md:mt-20 relative aspect-video bg-gradient-to-br from-accent/20 to-accent/5 rounded-2xl overflow-hidden border border-border"
           >
-            {/* TODO: Replace with actual video when available */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full bg-foreground/10 flex items-center justify-center">
-                  <svg className="w-8 h-8 md:w-10 md:h-10 text-foreground" fill="currentColor" viewBox="0 0 24 24">
+            {isPlaying ? (
+              <video
+                src={demoVideo}
+                controls
+                autoPlay
+                className="w-full h-full object-cover"
+                onEnded={() => setIsPlaying(false)}
+              />
+            ) : (
+              <button
+                onClick={() => setIsPlaying(true)}
+                className="absolute inset-0 flex items-center justify-center group"
+              >
+                <div className="w-20 h-20 rounded-full bg-background/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg className="w-8 h-8 text-accent ml-1" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </div>
-                <p className="text-sm text-muted">Watch demo video</p>
-              </div>
-            </div>
-            {/* Decorative gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent" />
+              </button>
+            )}
           </motion.div>
         </div>
       </div>

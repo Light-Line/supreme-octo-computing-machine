@@ -2,13 +2,20 @@ import { motion } from 'framer-motion';
 import { useReducedMotion } from 'framer-motion';
 import { StaggerContainer, StaggerItem } from './ScrollAnimations';
 
-const mockAds = [
-  { id: 1, title: 'Summer Collection', brand: 'ThreadCo', time: '2m ago' },
-  { id: 2, title: 'Protein Boost', brand: 'FitLife', time: '5m ago' },
-  { id: 3, title: 'Smart Home Sale', brand: 'TechNest', time: '8m ago' },
-  { id: 4, title: 'Coffee Subscription', brand: 'BeanBox', time: '12m ago' },
-  { id: 5, title: 'Yoga Mat Pro', brand: 'ZenFit', time: '18m ago' },
-  { id: 6, title: 'Watch Collection', brand: 'ChronoStyle', time: '24m ago' },
+import screenshot1 from '../assets/hero/screenshot-1.png';
+import screenshot2 from '../assets/hero/screenshot-2.png';
+import screenshot3 from '../assets/hero/screenshot-3.png';
+import screenshot4 from '../assets/hero/screenshot-4.png';
+import screenshot5 from '../assets/hero/screenshot-5.png';
+import screenshot6 from '../assets/hero/screenshot-6.png';
+
+const ads = [
+  { id: 1, title: 'Summer Collection', brand: 'ThreadCo', time: '2m ago', img: screenshot1 },
+  { id: 2, title: 'Protein Boost', brand: 'FitLife', time: '5m ago', img: screenshot2 },
+  { id: 3, title: 'Smart Home Sale', brand: 'TechNest', time: '8m ago', img: screenshot3 },
+  { id: 4, title: 'Coffee Subscription', brand: 'BeanBox', time: '12m ago', img: screenshot4 },
+  { id: 5, title: 'Yoga Mat Pro', brand: 'ZenFit', time: '18m ago', img: screenshot5 },
+  { id: 6, title: 'Watch Collection', brand: 'ChronoStyle', time: '24m ago', img: screenshot6 },
 ];
 
 export default function LiveFeed() {
@@ -35,21 +42,26 @@ export default function LiveFeed() {
 
         {/* Ad Grid with staggered animation */}
         <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {mockAds.map((ad) => (
+          {ads.map((ad) => (
             <StaggerItem key={ad.id}>
               <motion.div
                 whileHover={{ scale: 1.03, borderColor: 'rgb(124 58 237 / 0.5)' }}
                 transition={{ duration: 0.2 }}
-                className="bg-background rounded-xl p-4 md:p-6 border border-border transition-colors cursor-pointer"
+                className="bg-background rounded-xl overflow-hidden border border-border transition-colors cursor-pointer"
               >
-                {/* Placeholder image */}
-                <div className="aspect-[4/3] bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg mb-4 flex items-center justify-center">
-                  <span className="text-3xl">🎨</span>
-                </div>
-                <h3 className="font-semibold text-sm md:text-base mb-1">{ad.title}</h3>
-                <div className="flex items-center justify-between text-xs text-muted">
-                  <span>{ad.brand}</span>
-                  <span>{ad.time}</span>
+                {/* Real screenshot image */}
+                <img
+                  src={ad.img}
+                  alt={ad.title}
+                  className="w-full aspect-[4/3] object-cover"
+                  loading="lazy"
+                />
+                <div className="p-4">
+                  <h3 className="font-semibold text-sm md:text-base mb-1">{ad.title}</h3>
+                  <div className="flex items-center justify-between text-xs text-muted">
+                    <span>{ad.brand}</span>
+                    <span>{ad.time}</span>
+                  </div>
                 </div>
               </motion.div>
             </StaggerItem>
